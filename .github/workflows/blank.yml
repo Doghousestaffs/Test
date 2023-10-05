@@ -1,0 +1,1990 @@
+type: custom:stack-in-card
+cards:
+  - type: custom:layout-card
+    layout_type: custom:grid-layout
+    layout:
+      grid-template-columns: auto auto
+      margin: 8px 4px 4px 4px;
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: entity
+            entity: person.steve_allam
+            content_info: none
+            use_entity_picture: true
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                service: browser_mod.popup
+                data:
+                  title: Steve
+                  content:
+                    type: vertical-stack
+                    cards:
+                      - type: custom:mushroom-entity-card
+                        entity: person.steve_allam
+                        layout: horizontal
+                        icon_type: entity-picture
+                        primary_info: state
+                        secondary_info: last-changed
+                        tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        card_mod:
+                          style:
+                            mushroom-shape-avatar$: |
+                              .picture {
+
+                                /* Style shadow ring around person avatar */                              
+                                box-shadow: 8px 8px 4px 8px var(--state-person);
+                                margin-right: var(--mush-title-spacing, 12px);
+                              }
+                            .: |
+                              ha-card {
+
+                                /* Remove default card styling */
+                                --ha-card-background: none;
+                                box-shadow: none;
+                                --ha-card-border-width: 15px;
+                                --ha-card-border-color: transparent;
+
+                                /* Increase icon size */
+                                --icon-size: 95px; !important;
+
+                                /* Center card */
+                                margin: auto;
+                                width: fit-content;
+
+                                /* Add padding to bottom of card */
+                                padding: 0px 0px var(--mush-title-spacing, 12px) 0px !important;
+
+                                /* Make card non-responsive to select and pointer */
+                                user-select: none;
+                                pointer-events: none;
+
+                                transition: all 0s;
+                              }
+                              :host {
+
+                                /* Define Person State colors. Can be added to theme */
+                                --state-person-home: var(--green-color);
+                                --state-person-not-home: var(--red-color);
+                                --state-person-zone: var(--blue-color);
+                                --state-person-unknown: var(--grey-color);
+
+                                /* Set Person State color */
+                                --state-person:
+                                {% if is_state(config.entity, ['home', 'not_home', 'unknown']) %}
+                                  var(--state-person-{{ states(config.entity) | replace('_', '-') }})
+                                {% else %}
+                                  var(--state-person-zone)
+                                {% endif %};
+
+                                /* Match styling to Mushroom Title */
+                                --mush-card-primary-font-size: var(--mush-title-font-size, 24px);
+                                --mush-card-primary-font-weight: var(--mush-title-font-weight, normal);
+                                --mush-card-primary-line-height: var(--ush-title-line-height, 1.2);
+                                --mush-card-secondary-font-size: var(--mush-title-font-size, 16px);
+                                --mush-card-secondary-font-weight: var(--mush-title-font-weight, normal);
+                                --mush-card-secondary-line-height: var(--ush-title-line-height, 1.2);
+                              }
+                      - type: history-graph
+                        entities:
+                          - entity: person.steve_allam
+                            name: ' '
+                        hours_to_show: 24
+                        title: Timeline
+                        card_mod:
+                          style:
+                            $: |
+                              .card-header {
+
+                                /* Style timeline title */
+                                padding: 0px 24px !important;
+                                font-size: var(--mush-card-primary-font-size, 14px) !important;
+                                font-weight: var(--mush-card-primary-font-weight, bold) !important;
+                                line-height: var(--mush-card-primary-line-height, 1.5) !important;
+                                color: var(--primary-text-color) !important;
+                              }
+                            .: |
+                              ha-card {
+
+                                /* Remove default card styling */
+                                --ha-card-box-shadow: none;
+                                --ha-card-background: none;
+                                --ha-card-border-width: 0;
+                                user-select: none;
+                              }
+                              .content {
+
+                                /* Add padding on right */
+                                padding: 0px 24px !important;
+                              }
+                      - type: horizontal-stack
+                        cards:
+                          - type: conditional
+                            conditions:
+                              - entity: proximity.steve
+                                state_not: '0'
+                            card:
+                              type: custom:mushroom-template-card
+                              primary: >-
+                                {{ states(entity) }} {{ state_attr(entity,
+                                'unit_of_measurement') }}
+                              secondary: >-
+                                {{ state_attr(entity, 'distance') | round(1) }}
+                                Mi
+                              icon: mdi:map-marker-path
+                              entity: proximity.steve
+                              layout: vertical
+                              icon_color: pink
+                              tap_action:
+                                action: none
+                              hold_action:
+                                action: none
+                              double_tap_action:
+                                action: none
+                              card_mod:
+                                style:
+                                  mushroom-state-info$: |
+                                    .primary:after {
+
+                                      /* Add destination details */
+                                      content: "\Ato Home";
+                                      white-space: pre;
+                                      text-overflow: ellipsis;
+                                    }
+                                  .: |
+                                    ha-card {
+
+                                      /* Remove default card styling */
+                                      --ha-card-background: none;
+                                      --ha-card-box-shadow: none;
+                                      --ha-card-border-width: 0;
+
+                                      /* Center card on row */
+                                      width: fit-content;
+                                      margin: auto;
+
+                                      /* Make card non-responsive to select and pointer */
+                                      user-select: none;
+                                      pointer-events: none;
+                                    }
+                          - type: conditional
+                            conditions:
+                              - entity: sensor.home_to_freeport
+                                state_not: '0'
+                            card:
+                              type: custom:mushroom-template-card
+                              primary: >-
+                                {{ states(entity) }} {{ state_attr(entity,
+                                'unit_of_measurement') }}
+                              secondary: >-
+                                {{ state_attr(entity, 'distance') | round(1) }}
+                                Mi
+                              icon: mdi:map-marker-path
+                              entity: sensor.home_to_freeport
+                              layout: vertical
+                              icon_color: purple
+                              tap_action:
+                                action: none
+                              hold_action:
+                                action: none
+                              double_tap_action:
+                                action: none
+                              card_mod:
+                                style:
+                                  mushroom-state-info$: |
+                                    .primary:after {
+
+                                      /* Add destination details */
+                                      content: "\Ato Work";
+                                      white-space: pre;
+                                      text-overflow: ellipsis;
+                                    }
+                                  .: |
+                                    ha-card {
+
+                                      /* Remove default card styling */
+                                      --ha-card-background: none;
+                                      --ha-card-box-shadow: none;
+                                      --ha-card-border-width: 0;
+
+                                      /* Center card on row */
+                                      width: fit-content;
+                                      margin: auto;
+
+                                      /* Make card non-responsive to select and pointer */
+                                      user-select: none;
+                                      pointer-events: none;
+                                    }
+                          - type: conditional
+                            conditions:
+                              - entity: sensor.steve_to_home
+                                state_not: '0'
+                            card:
+                              type: custom:mushroom-template-card
+                              primary: >-
+                                {{ states(entity) }} {{ state_attr(entity,
+                                'unit_of_measurement') }}
+                              secondary: >-
+                                {{ state_attr(entity, 'distance') | round(1) }}
+                                Mi
+                              icon: mdi:map-marker-path
+                              entity: sensor.steve_to_home
+                              layout: vertical
+                              icon_color: purple
+                              tap_action:
+                                action: none
+                              hold_action:
+                                action: none
+                              double_tap_action:
+                                action: none
+                              card_mod:
+                                style:
+                                  mushroom-state-info$: |
+                                    .primary:after {
+
+                                      /* Add destination details */
+                                      content: "\Ato Home";
+                                      white-space: pre;
+                                      text-overflow: ellipsis;
+                                    }
+                                  .: |
+                                    ha-card {
+
+                                      /* Remove default card styling */
+                                      --ha-card-background: none;
+                                      --ha-card-box-shadow: none;
+                                      --ha-card-border-width: 0;
+
+                                      /* Center card on row */
+                                      width: fit-content;
+                                      margin: auto;
+
+                                      /* Make card non-responsive to select and pointer */
+                                      user-select: none;
+                                      pointer-events: none;
+                                    }
+                      - type: horizontal-stack
+                        cards:
+                          - type: conditional
+                            conditions:
+                              - entity: sensor.iphone_steps
+                                state_not: '0'
+                            card:
+                              type: custom:mushroom-template-card
+                              primary: >-
+                                {{ states(entity) }} {{ state_attr(entity,
+                                'unit_of_measurement') }}
+                              secondary: >-
+                                {{ state_attr(entity, 'distance') | round(1) }}
+                                km
+                              icon: mdi:walk
+                              entity: sensor.iphone_steps
+                              layout: vertical
+                              icon_color: lime
+                              tap_action:
+                                action: none
+                              hold_action:
+                                action: none
+                              double_tap_action:
+                                action: none
+                              card_mod:
+                                style:
+                                  mushroom-state-info$: |
+                                    .primary:after {
+
+                                      /* Add destination details */
+                                      content: "\Atoday";
+                                      white-space: pre;
+                                      text-overflow: ellipsis;
+                                    }
+                                  .: |
+                                    ha-card {
+
+                                      /* Remove default card styling */
+                                      --ha-card-background: none;
+                                      --ha-card-box-shadow: none;
+                                      --ha-card-border-width: 0;
+
+                                      /* Center card on row */
+                                      width: fit-content;
+                                      margin: auto;
+
+                                      /* Make card non-responsive to select and pointer */
+                                      user-select: none;
+                                      pointer-events: none;
+                                    }
+                          - type: custom:mushroom-template-card
+                            primary: '{{ states(entity) }}%'
+                            secondary: >
+                              {{ 'Charging' if
+                              is_state('sensor.iphone_battery_state', 'Charging'
+                              ) else 'Discharging' }}
+                            icon: >
+                              {% set battery_level = (states(entity) | int / 10)
+                              | round(0) | int * 10 %}
+
+                              {% if battery_level == 100 %}
+                                mdi:battery
+                              {% elif battery_level > 0 %}
+                                mdi:battery-{{ battery_level }}
+                              {% else %}
+                                mdi:battery-alert-variant-outline
+                              {% endif %}
+                            icon_color: |-
+                              {% set battery_level = states(entity) | int %}
+                              {% if battery_level > 90 %} 
+                                green
+                              {% elif battery_level > 60 %}
+                                light-green
+                              {% elif battery_level > 50 %}
+                                lime
+                              {% elif battery_level > 40 %}
+                                yellow
+                              {% elif battery_level > 30 %}
+                                amber
+                              {% elif battery_level > 20 %}
+                                orange
+                              {% elif battery_level > 10 %}
+                                deep-orange
+                              {% else %}
+                                red
+                              {% endif %} 
+                            entity: sensor.iphone_battery_level
+                            layout: vertical
+                            badge_icon: >-
+                              {% if is_state('sensor.iphone_battery_state',
+                              'Charging') %}
+                                mdi:lightning-bolt
+                              {% elif states(entity) | int < 10 %} 
+                                mdi:exclamation-thick
+                              {% endif %}
+                            badge_color: >-
+                              {{ 'red' if states(entity) | int < 10 else
+                              'light-blue' }}
+                            tap_action:
+                              action: none
+                            hold_action:
+                              action: none
+                            double_tap_action:
+                              action: none
+                            card_mod:
+                              style:
+                                mushroom-shape-icon$: |
+                                  .shape {
+
+                                    /* Radial progress bar */
+                                     background: radial-gradient(var(--card-background-color) 60%, 
+                                                        transparent calc(60% + 1px)), 
+                                                conic-gradient(var(--icon-color) {{ states(config.entity) }}% 0%, 
+                                                        var(--card-background-color) 0% 100%);
+                                  }
+                                  .shape:after {
+
+                                    /* Add back icon shape */
+                                    content: "";
+                                    height: 100%;
+                                    width: 100%;
+                                    position: absolute;
+                                    border-radius: var(--icon-border-radius);
+                                    background: var(--shape-color);
+                                  }
+                                .: |
+                                  ha-card {
+
+                                    /* Remove default card styling */
+                                    --ha-card-background: none;
+                                    --ha-card-box-shadow: none;
+                                    --ha-card-border-width: 0;
+
+                                    /* Center card on row */
+                                    width: fit-content;
+                                    margin: auto;
+
+                                    /* Make card non-responsive to select and pointer */
+                                    user-select: none;
+                                    pointer-events: none;
+                                  ha-state-icon {
+                                    /* Icon charging animation */
+                                    {% if is_state('sensor.iphone_battery_state', 'Not_Charging') %}
+                                    {% else %}
+                                      animation: charge 2s linear infinite;
+                                      }
+                                  @keyframes charge {
+                                    0%, 80% { clip-path: inset(0 0 0 0); }
+                                    10% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 84%, 34% 84%, 34% 100%, 100% 100%, 100% 0%); }
+                                    20% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 74%, 34% 74%, 34% 100%, 100% 100%, 100% 0%); }
+                                    30% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 64%, 34% 64%, 34% 100%, 100% 100%, 100% 0%); }
+                                    40% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 54%, 34% 54%, 34% 100%, 100% 100%, 100% 0%); }
+                                    50% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 44%, 34% 44%, 34% 100%, 100% 100%, 100% 0%); }
+                                    60% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 34%, 34% 34%, 34% 100%, 100% 100%, 100% 0%); }
+                                    70% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 24%, 34% 24%, 34% 100%, 100% 100%, 100% 0%); }
+                                  }
+                                  }
+                          - type: conditional
+                            conditions:
+                              - entity: sensor.iphone_connection_type
+                                state_not: <not connected>
+                            card:
+                              type: custom:mushroom-template-card
+                              primary: '{{ states(''sensor.iphone_connection_type'') }}'
+                              icon: mdi:wifi-check
+                              entity: sensor.iphone_connection_type
+                              layout: vertical
+                              fill_container: false
+                              icon_color: cyan
+                              tap_action:
+                                action: none
+                              hold_action:
+                                action: none
+                              double_tap_action:
+                                action: none
+                              card_mod:
+                                style: |
+                                  ha-card {
+
+                                    /* Remove default card styling */
+                                    --ha-card-background: none;
+                                    --ha-card-box-shadow: none;
+                                    --ha-card-border-width: 0;
+
+                                    /* Center card on row */
+                                    width: fit-content;
+                                    margin: auto;
+
+                                    /* Make card non-responsive to select and pointer */
+                                    user-select: none;
+                                    pointer-events: none;
+                                  }
+                      - type: custom:mushroom-chips-card
+                        chips:
+                          - type: template
+                            tap_action:
+                              action: none;
+                            hold_action:
+                              haptic: success
+                              action: call-service
+                              confirmation:
+                                text: Phone will sound, OK?
+                              service: homeassistant.turn_on
+                              service_data:
+                                entity_id: script.findsteve
+                            icon: mdi:target
+                            icon_color: red
+                            content: Find iPhone
+                        alignment: center
+                        card_mod:
+                          style: |
+                            ha-card {
+
+                              /* Style Chip like Mushroom button */
+                              --chip-background: rgba(var(--rgb-red), 0.2);
+                              --chip-border-radius: var(--mush-control-border-radius, 12px);
+                              --chip-height: var(--mush-control-height, 42px);
+                              --chip-box-shadow: none;
+                              user-select: none;
+                            }
+                            ha-card:active {
+
+                              /* Add effect to give feedback on button press */
+                              --chip-background: rgba(var(--rgb-red), 0.4);
+                            }
+                      - type: map
+                        entities:
+                          - entity: person.steve_allam
+                        dark_mode: true
+                        hours_to_show: 24
+                        aspect_ratio: '4:3'
+                        card_mod:
+                          style:
+                            ha-map $ ha-entity-marker $: |
+                              .marker {
+
+                                /* Style person marker & adjust position to avoid blocking waypoints */
+                                border: 3px solid var(--state-person) !important;
+                                border-radius: 50% 50% 50% 0px !important;
+                                transform: rotate(-45deg) translate(50%, -50%);
+                                overflow: visible !important;
+                                background: var(--state-person) !important;
+                              }
+                              .entity-picture {
+
+                                /* Correct orientation of person avatar */
+                                transform: rotate(45deg);
+                                border-radius: 50%;
+                              }
+                            ha-map $: |
+                              path:first-child { 
+
+                                /* Style accuracy radius */
+                                stroke: var(--state-person);
+                                fill: color-mix(in srgb, var(--state-person) 50%, transparent);
+                                stroke-width: 0px;
+                               }
+                              path:nth-child(even) {
+
+                                /* Styling for waypoints */
+                                stroke: var(--purple-color);
+                                stroke-width: 4px;
+                              }
+                              path:nth-child(odd):not(:first-child) { 
+
+                                /* Styling for lines */
+                                stroke: var(--purple-color);
+                                stroke-width: 4px;
+                              }
+
+                              .leaflet-control-attribution {
+
+                                /* Style attribution text */
+                                background: rgba(var(--rgb-card-background-color), 0.4) !important;
+                                font-size: 10px;
+                              }
+                              .leaflet-container a {
+
+                                /* Set color of zoom icons & attribution text */
+                                color: var(--secondary-text-color);
+                              }
+
+                              .leaflet-control-zoom-in,
+                              .leaflet-control-zoom-out {
+
+                                /* Style zoom buttons like Chips */
+                                border-radius: var(--mush-chip-border-radius, 19px) !important;
+                                padding: 3px;
+                                background: rgb(var(--rgb-secondary-text-color), 0.2) !important;
+                                margin: 8px 12px 0px;
+                                border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color, #e0e0e0)) !important;
+                              } 
+                              .leaflet-top {
+
+                                /* Move zoom buttons to bottom of map */
+                                bottom: 0px !important;
+                              }
+                              .leaflet-control-zoom {
+
+                                /* Allow buttons to be moved */
+                                position: absolute !important;
+
+                                /* Adjust spacing for border */
+                                bottom: calc(2 * var(--ha-card-border-width, 1px) + 56px);
+
+                                /* Remove extra margin */
+                                margin: 0px !important;
+
+                                /* Remove zoom control border */
+                                border: none !important;
+                              }
+                              .leaflet-container:after {
+
+                                /* Fade out map at top */
+                                content: "";
+                                position: absolute;
+                                height: 100%;
+                                width: 100%;
+                                background: linear-gradient(to top, transparent 65%, var(--card-background-color));
+                              }
+                            ha-icon-button $ mwc-icon-button $: |
+                              button {
+
+                                /* Size center button to match Chip */
+                                height: var(--mush-chip-height, 36px) !important;
+                                width: var(--mush-chip-height, 36px) !important;
+                                --mdc-icon-size: 22px;
+                              }
+                            .: |
+                              ha-card {
+
+                                /* Remove default card styling without affecting child elements */
+                                box-shadow: none;
+                                border-width: 0;
+                                border-radius: 0px 0px var(--ha-card-border-radius, 12px) var(--ha-card-border-radius, 12px);
+
+                                transition: all 0s;
+                              }
+                              :host {
+
+                                /* Define Person State colors. Can be added to theme */
+                                --state-person-home: var(--green-color);
+                                --state-person-not-home: var(--red-color);
+                                --state-person-zone: var(--blue-color);
+                                --state-person-unknown: var(--grey-color);
+
+                                /* Set person state color */
+                                --state-person:
+                                {% if is_state(config.entities[0].entity, ['home', 'not_home', 'unknown']) %}
+                                  var(--state-person-{{ states(config.entities[0].entity) | replace('_', '-') }})
+                                {% else %}
+                                  var(--state-person-zone)
+                                {% endif %};
+                              }
+                              ha-icon-button {
+
+                                /* Position center button */
+                                bottom: 12px;
+                                left: 12px !important;
+                                top: auto !important;
+
+                                /* Style center button to match Chip */
+                                color: var(--deep-orange-color) !important;
+                                background: color-mix(in srgb, var(--deep-orange-color) 20%, transparent);
+                                border-radius: var(--mush-chip-border-radius, 19px);
+                                border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color, #e0e0e0)) !important;
+                              }
+                  card_mod:
+                    style: |
+                      :host {
+
+                        /* Remove border from poup */
+                        --popup-padding-x: 0px;
+                        --popup-padding-y: 0px;
+                        --popup-min-width: 450px;
+                      }
+                      .content {
+
+                       /* Remove extra bottom border */
+                        margin: -18px -24px -24px !important;
+                      }
+            card_mod:
+              style: |
+
+                /* Color border around avatar to show person status */
+                ha-card {
+                  --chip-background:
+                  {% if is_state(config.entity, ['home', 'not_home', 'unknown']) %}
+                    rgb(var(--rgb-state-person-{{ states(config.entity) | replace('_', '-') }} ))
+                  {% else %}
+                    rgb(var(--rgb-state-person-zone))
+                  {% endif %};
+                } 
+
+                /* Slightly enlarge & bring to front on hover */
+                ha-card:hover {
+                  transform: scale(1.2);
+                  transform-origin: top center;
+                  z-index: 1;
+                  transition: all 1s;
+                }
+
+                    card_mod:
+                      style: |
+                        /* Color border around avatar to show person status */
+                        ha-card {
+                          --chip-background:
+                          {% if is_state(config.entity, ['home', 'not_home', 'unknown']) %}
+                            rgb(var(--rgb-state-person-{{ states(config.entity) | replace('_', '-') }} ))
+                          {% else %}
+                            rgb(var(--rgb-state-person-zone))
+                          {% endif %};
+                        } 
+                        /* Slightly enlarge & bring to front on hover */
+                        ha-card:hover {
+                          transform: scale(1.2);
+                          transform-origin: top center;
+                          z-index: 1;
+                          transition: all 1s;
+                        }
+          - type: entity
+            entity: person.sophie
+            content_info: none
+            use_entity_picture: true
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                service: browser_mod.popup
+                data:
+                  title: Sophie
+                  content:
+                    type: vertical-stack
+                    cards:
+                      - type: custom:mushroom-entity-card
+                        entity: person.sophie
+                        layout: horizontal
+                        icon_type: entity-picture
+                        primary_info: state
+                        secondary_info: last-changed
+                        tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        card_mod:
+                          style:
+                            mushroom-shape-avatar$: |
+                              .picture {
+
+                                /* Style shadow ring around person avatar */                              
+                                box-shadow: 0px 0px 4px 2px var(--state-person);
+                                margin-right: var(--mush-title-spacing, 12px);
+                              }
+                            .: |
+                              ha-card {
+
+                                /* Remove default card styling */
+                                --ha-card-background: none;
+                                box-shadow: none;
+                                --ha-card-border-width: 15px;
+                                --ha-card-border-color: transparent;
+
+                                /* Increase icon size */
+                                --icon-size: 95px; !important;
+
+                                /* Center card */
+                                margin: auto;
+                                width: fit-content;
+
+                                /* Add padding to bottom of card */
+                                padding: 0px 0px var(--mush-title-spacing, 12px) 0px !important;
+
+                                /* Make card non-responsive to select and pointer */
+                                user-select: none;
+                                pointer-events: none;
+
+                                transition: all 0s;
+                              }
+                              :host {
+
+                                /* Define Person State colors. Can be added to theme */
+                                --state-person-home: var(--green-color);
+                                --state-person-not-home: var(--red-color);
+                                --state-person-zone: var(--blue-color);
+                                --state-person-unknown: var(--grey-color);
+
+                                /* Set Person State color */
+                                --state-person:
+                                {% if is_state(config.entity, ['home', 'not_home', 'unknown']) %}
+                                  var(--state-person-{{ states(config.entity) | replace('_', '-') }})
+                                {% else %}
+                                  var(--state-person-zone)
+                                {% endif %};
+
+                                /* Match styling to Mushroom Title */
+                                --mush-card-primary-font-size: var(--mush-title-font-size, 24px);
+                                --mush-card-primary-font-weight: var(--mush-title-font-weight, normal);
+                                --mush-card-primary-line-height: var(--ush-title-line-height, 1.2);
+                                --mush-card-secondary-font-size: var(--mush-title-font-size, 16px);
+                                --mush-card-secondary-font-weight: var(--mush-title-font-weight, normal);
+                                --mush-card-secondary-line-height: var(--ush-title-line-height, 1.2);
+                              }
+                      - type: history-graph
+                        entities:
+                          - entity: person.sophie
+                            name: ' '
+                        hours_to_show: 24
+                        title: Timeline
+                        card_mod:
+                          style:
+                            $: |
+                              .card-header {
+
+                                /* Style timeline title */
+                                padding: 0px 24px !important;
+                                font-size: var(--mush-card-primary-font-size, 14px) !important;
+                                font-weight: var(--mush-card-primary-font-weight, bold) !important;
+                                line-height: var(--mush-card-primary-line-height, 1.5) !important;
+                                color: var(--primary-text-color) !important;
+                              }
+                            .: |
+                              ha-card {
+
+                                /* Remove default card styling */
+                                --ha-card-box-shadow: none;
+                                --ha-card-background: none;
+                                --ha-card-border-width: 0;
+                                user-select: none;
+                              }
+                              .content {
+
+                                /* Add padding on right */
+                                padding: 0px 24px !important;
+                              }
+                      - type: horizontal-stack
+                        cards:
+                          - type: conditional
+                            conditions:
+                              - entity: proximity.sophie
+                                state_not: '0'
+                            card:
+                              type: custom:mushroom-template-card
+                              primary: >-
+                                {{ states(entity) }} {{ state_attr(entity,
+                                'unit_of_measurement') }}
+                              secondary: >-
+                                {{ state_attr(entity, 'distance') | round(1) }}
+                                Mi
+                              icon: mdi:map-marker-path
+                              entity: proximity.sophie
+                              layout: vertical
+                              icon_color: pink
+                              tap_action:
+                                action: none
+                              hold_action:
+                                action: none
+                              double_tap_action:
+                                action: none
+                              card_mod:
+                                style:
+                                  mushroom-state-info$: |
+                                    .primary:after {
+
+                                      /* Add destination details */
+                                      content: "\Ato Home";
+                                      white-space: pre;
+                                      text-overflow: ellipsis;
+                                    }
+                                  .: |
+                                    ha-card {
+
+                                      /* Remove default card styling */
+                                      --ha-card-background: none;
+                                      --ha-card-box-shadow: none;
+                                      --ha-card-border-width: 0;
+
+                                      /* Center card on row */
+                                      width: fit-content;
+                                      margin: auto;
+
+                                      /* Make card non-responsive to select and pointer */
+                                      user-select: none;
+                                      pointer-events: none;
+                                    }
+                          - type: conditional
+                            conditions:
+                              - entity: sensor.home_to_screwfix
+                                state_not: '0'
+                            card:
+                              type: custom:mushroom-template-card
+                              primary: >-
+                                {{ states(entity) }} {{ state_attr(entity,
+                                'unit_of_measurement') }}
+                              secondary: >-
+                                {{ state_attr(entity, 'distance') | round(1) }}
+                                Mi
+                              icon: mdi:map-marker-path
+                              entity: sensor.home_to_screwfix
+                              layout: vertical
+                              icon_color: purple
+                              tap_action:
+                                action: none
+                              hold_action:
+                                action: none
+                              double_tap_action:
+                                action: none
+                              card_mod:
+                                style:
+                                  mushroom-state-info$: |
+                                    .primary:after {
+
+                                      /* Add destination details */
+                                      content: "\Ato Work";
+                                      white-space: pre;
+                                      text-overflow: ellipsis;
+                                    }
+                                  .: |
+                                    ha-card {
+
+                                      /* Remove default card styling */
+                                      --ha-card-background: none;
+                                      --ha-card-box-shadow: none;
+                                      --ha-card-border-width: 0;
+
+                                      /* Center card on row */
+                                      width: fit-content;
+                                      margin: auto;
+
+                                      /* Make card non-responsive to select and pointer */
+                                      user-select: none;
+                                      pointer-events: none;
+                                    }
+                          - type: conditional
+                            conditions:
+                              - entity: sensor.sophie_to_home
+                                state_not: '0'
+                            card:
+                              type: custom:mushroom-template-card
+                              primary: >-
+                                {{ states(entity) }} {{ state_attr(entity,
+                                'unit_of_measurement') }}
+                              secondary: >-
+                                {{ state_attr(entity, 'distance') | round(1) }}
+                                Mi
+                              icon: mdi:map-marker-path
+                              entity: sensor.sophie_to_home
+                              layout: vertical
+                              icon_color: purple
+                              tap_action:
+                                action: none
+                              hold_action:
+                                action: none
+                              double_tap_action:
+                                action: none
+                              card_mod:
+                                style:
+                                  mushroom-state-info$: |
+                                    .primary:after {
+
+                                      /* Add destination details */
+                                      content: "\Ato Home";
+                                      white-space: pre;
+                                      text-overflow: ellipsis;
+                                    }
+                                  .: |
+                                    ha-card {
+
+                                      /* Remove default card styling */
+                                      --ha-card-background: none;
+                                      --ha-card-box-shadow: none;
+                                      --ha-card-border-width: 0;
+
+                                      /* Center card on row */
+                                      width: fit-content;
+                                      margin: auto;
+
+                                      /* Make card non-responsive to select and pointer */
+                                      user-select: none;
+                                      pointer-events: none;
+                                    }
+                      - type: horizontal-stack
+                        cards:
+                          - type: conditional
+                            conditions:
+                              - entity: sensor.sophieiphone_steps_2
+                                state_not: '0'
+                            card:
+                              type: custom:mushroom-template-card
+                              primary: >-
+                                {{ states(entity) }} {{ state_attr(entity,
+                                'unit_of_measurement') }}
+                              secondary: >-
+                                {{ state_attr(entity, 'distance') | round(1) }}
+                                km
+                              icon: mdi:walk
+                              entity: sensor.sophieiphone_steps_2
+                              layout: vertical
+                              icon_color: lime
+                              tap_action:
+                                action: none
+                              hold_action:
+                                action: none
+                              double_tap_action:
+                                action: none
+                              card_mod:
+                                style:
+                                  mushroom-state-info$: |
+                                    .primary:after {
+
+                                      /* Add destination details */
+                                      content: "\Atoday";
+                                      white-space: pre;
+                                      text-overflow: ellipsis;
+                                    }
+                                  .: |
+                                    ha-card {
+
+                                      /* Remove default card styling */
+                                      --ha-card-background: none;
+                                      --ha-card-box-shadow: none;
+                                      --ha-card-border-width: 0;
+
+                                      /* Center card on row */
+                                      width: fit-content;
+                                      margin: auto;
+
+                                      /* Make card non-responsive to select and pointer */
+                                      user-select: none;
+                                      pointer-events: none;
+                                    }
+                          - type: custom:mushroom-template-card
+                            primary: '{{ states(entity) }}%'
+                            secondary: >
+                              {{ 'Charging' if
+                              is_state('sensor.sophieiphone_battery_state_2',
+                              'Charging' ) else 'Discharging' }}
+                            icon: >
+                              {% set battery_level = (states(entity) | int / 10)
+                              | round(0) | int * 10 %}
+
+                              {% if battery_level == 100 %}
+                                mdi:battery
+                              {% elif battery_level > 0 %}
+                                mdi:battery-{{ battery_level }}
+                              {% else %}
+                                mdi:battery-alert-variant-outline
+                              {% endif %}
+                            icon_color: |-
+                              {% set battery_level = states(entity) | int %}
+                              {% if battery_level > 90 %} 
+                                green
+                              {% elif battery_level > 60 %}
+                                light-green
+                              {% elif battery_level > 50 %}
+                                lime
+                              {% elif battery_level > 40 %}
+                                yellow
+                              {% elif battery_level > 30 %}
+                                amber
+                              {% elif battery_level > 20 %}
+                                orange
+                              {% elif battery_level > 10 %}
+                                deep-orange
+                              {% else %}
+                                red
+                              {% endif %} 
+                            entity: sensor.sophieiphone_battery_level_2
+                            layout: vertical
+                            badge_icon: >-
+                              {% if
+                              is_state('sensor.sophieiphone_battery_state_2',
+                              'Charging') %}
+                                mdi:lightning-bolt
+                              {% elif states(entity) | int < 10 %} 
+                                mdi:exclamation-thick
+                              {% endif %}
+                            badge_color: >-
+                              {{ 'red' if states(entity) | int < 10 else
+                              'light-blue' }}
+                            tap_action:
+                              action: none
+                            hold_action:
+                              action: none
+                            double_tap_action:
+                              action: none
+                            card_mod:
+                              style:
+                                mushroom-shape-icon$: |
+                                  .shape {
+
+                                    /* Radial progress bar */
+                                     background: radial-gradient(var(--card-background-color) 60%, 
+                                                        transparent calc(60% + 1px)), 
+                                                conic-gradient(var(--icon-color) {{ states(config.entity) }}% 0%, 
+                                                        var(--card-background-color) 0% 100%);
+                                  }
+                                  .shape:after {
+
+                                    /* Add back icon shape */
+                                    content: "";
+                                    height: 100%;
+                                    width: 100%;
+                                    position: absolute;
+                                    border-radius: var(--icon-border-radius);
+                                    background: var(--shape-color);
+                                  }
+                                .: |
+                                  ha-card {
+
+                                    /* Remove default card styling */
+                                    --ha-card-background: none;
+                                    --ha-card-box-shadow: none;
+                                    --ha-card-border-width: 0;
+
+                                    /* Center card on row */
+                                    width: fit-content;
+                                    margin: auto;
+
+                                    /* Make card non-responsive to select and pointer */
+                                    user-select: none;
+                                    pointer-events: none;
+                                  ha-state-icon {
+                                    /* Icon charging animation */
+                                    {% if is_state('sensor.iphone_battery_state', 'Not_Charging') %}
+                                    {% else %}
+                                      animation: charge 2s linear infinite;
+                                      }
+                                  @keyframes charge {
+                                    0%, 80% { clip-path: inset(0 0 0 0); }
+                                    10% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 84%, 34% 84%, 34% 100%, 100% 100%, 100% 0%); }
+                                    20% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 74%, 34% 74%, 34% 100%, 100% 100%, 100% 0%); }
+                                    30% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 64%, 34% 64%, 34% 100%, 100% 100%, 100% 0%); }
+                                    40% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 54%, 34% 54%, 34% 100%, 100% 100%, 100% 0%); }
+                                    50% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 44%, 34% 44%, 34% 100%, 100% 100%, 100% 0%); }
+                                    60% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 34%, 34% 34%, 34% 100%, 100% 100%, 100% 0%); }
+                                    70% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 24%, 34% 24%, 34% 100%, 100% 100%, 100% 0%); }
+                                  }
+                                  }
+                          - type: conditional
+                            conditions:
+                              - entity: sensor.sophieiphone_connection_type_2
+                                state_not: <not connected>
+                            card:
+                              type: custom:mushroom-template-card
+                              primary: >-
+                                {{
+                                states('sensor.sophieiphone_connection_type_2')
+                                }}
+                              icon: mdi:wifi-check
+                              entity: sensor.sophieiphone_connection_type_2
+                              layout: vertical
+                              fill_container: false
+                              icon_color: cyan
+                              tap_action:
+                                action: none
+                              hold_action:
+                                action: none
+                              double_tap_action:
+                                action: none
+                              card_mod:
+                                style: |
+                                  ha-card {
+
+                                    /* Remove default card styling */
+                                    --ha-card-background: none;
+                                    --ha-card-box-shadow: none;
+                                    --ha-card-border-width: 0;
+
+                                    /* Center card on row */
+                                    width: fit-content;
+                                    margin: auto;
+
+                                    /* Make card non-responsive to select and pointer */
+                                    user-select: none;
+                                    pointer-events: none;
+                                  }
+                      - type: custom:mushroom-chips-card
+                        chips:
+                          - type: template
+                            tap_action:
+                              action: none;
+                            hold_action:
+                              haptic: success
+                              action: call-service
+                              confirmation:
+                                text: Phone will sound, OK?
+                              service: homeassistant.turn_on
+                              service_data:
+                                entity_id: script.findsophie
+                            icon: mdi:target
+                            icon_color: red
+                            content: Find iPhone
+                        alignment: center
+                        card_mod:
+                          style: |
+                            ha-card {
+
+                              /* Style Chip like Mushroom button */
+                              --chip-background: rgba(var(--rgb-red), 0.2);
+                              --chip-border-radius: var(--mush-control-border-radius, 12px);
+                              --chip-height: var(--mush-control-height, 42px);
+                              --chip-box-shadow: none;
+                              user-select: none;
+                            }
+                            ha-card:active {
+
+                              /* Add effect to give feedback on button press */
+                              --chip-background: rgba(var(--rgb-red), 0.4);
+                            }
+                      - type: map
+                        entities:
+                          - entity: person.sophie
+                        dark_mode: true
+                        hours_to_show: 24
+                        aspect_ratio: '4:3'
+                        card_mod:
+                          style:
+                            ha-map $ ha-entity-marker $: |
+                              .marker {
+
+                                /* Style person marker & adjust position to avoid blocking waypoints */
+                                border: 3px solid var(--state-person) !important;
+                                border-radius: 50% 50% 50% 0px !important;
+                                transform: rotate(-45deg) translate(50%, -50%);
+                                overflow: visible !important;
+                                background: var(--state-person) !important;
+                              }
+                              .entity-picture {
+
+                                /* Correct orientation of person avatar */
+                                transform: rotate(45deg);
+                                border-radius: 50%;
+                              }
+                            ha-map $: |
+                              path:first-child { 
+
+                                /* Style accuracy radius */
+                                stroke: var(--state-person);
+                                fill: color-mix(in srgb, var(--state-person) 50%, transparent);
+                                stroke-width: 0px;
+                               }
+                              path:nth-child(even) {
+
+                                /* Styling for waypoints */
+                                stroke: var(--purple-color);
+                                stroke-width: 4px;
+                              }
+                              path:nth-child(odd):not(:first-child) { 
+
+                                /* Styling for lines */
+                                stroke: var(--purple-color);
+                                stroke-width: 4px;
+                              }
+
+                              .leaflet-control-attribution {
+
+                                /* Style attribution text */
+                                background: rgba(var(--rgb-card-background-color), 0.4) !important;
+                                font-size: 10px;
+                              }
+                              .leaflet-container a {
+
+                                /* Set color of zoom icons & attribution text */
+                                color: var(--secondary-text-color);
+                              }
+
+                              .leaflet-control-zoom-in,
+                              .leaflet-control-zoom-out {
+
+                                /* Style zoom buttons like Chips */
+                                border-radius: var(--mush-chip-border-radius, 19px) !important;
+                                padding: 3px;
+                                background: rgb(var(--rgb-secondary-text-color), 0.2) !important;
+                                margin: 8px 12px 0px;
+                                border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color, #e0e0e0)) !important;
+                              } 
+                              .leaflet-top {
+
+                                /* Move zoom buttons to bottom of map */
+                                bottom: 0px !important;
+                              }
+                              .leaflet-control-zoom {
+
+                                /* Allow buttons to be moved */
+                                position: absolute !important;
+
+                                /* Adjust spacing for border */
+                                bottom: calc(2 * var(--ha-card-border-width, 1px) + 56px);
+
+                                /* Remove extra margin */
+                                margin: 0px !important;
+
+                                /* Remove zoom control border */
+                                border: none !important;
+                              }
+                              .leaflet-container:after {
+
+                                /* Fade out map at top */
+                                content: "";
+                                position: absolute;
+                                height: 100%;
+                                width: 100%;
+                                background: linear-gradient(to top, transparent 65%, var(--card-background-color));
+                              }
+                            ha-icon-button $ mwc-icon-button $: |
+                              button {
+
+                                /* Size center button to match Chip */
+                                height: var(--mush-chip-height, 36px) !important;
+                                width: var(--mush-chip-height, 36px) !important;
+                                --mdc-icon-size: 22px;
+                              }
+                            .: |
+                              ha-card {
+
+                                /* Remove default card styling without affecting child elements */
+                                box-shadow: none;
+                                border-width: 0;
+                                border-radius: 0px 0px var(--ha-card-border-radius, 12px) var(--ha-card-border-radius, 12px);
+
+                                transition: all 0s;
+                              }
+                              :host {
+
+                                /* Define Person State colors. Can be added to theme */
+                                --state-person-home: var(--green-color);
+                                --state-person-not-home: var(--red-color);
+                                --state-person-zone: var(--blue-color);
+                                --state-person-unknown: var(--grey-color);
+
+                                /* Set person state color */
+                                --state-person:
+                                {% if is_state(config.entities[0].entity, ['home', 'not_home', 'unknown']) %}
+                                  var(--state-person-{{ states(config.entities[0].entity) | replace('_', '-') }})
+                                {% else %}
+                                  var(--state-person-zone)
+                                {% endif %};
+                              }
+                              ha-icon-button {
+
+                                /* Position center button */
+                                bottom: 12px;
+                                left: 12px !important;
+                                top: auto !important;
+
+                                /* Style center button to match Chip */
+                                color: var(--deep-orange-color) !important;
+                                background: color-mix(in srgb, var(--deep-orange-color) 20%, transparent);
+                                border-radius: var(--mush-chip-border-radius, 19px);
+                                border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color, #e0e0e0)) !important;
+                              }
+                  card_mod:
+                    style: |
+                      :host {
+
+                        /* Remove border from poup */
+                        --popup-padding-x: 0px;
+                        --popup-padding-y: 0px;
+                        --popup-min-width: 450px;
+                      }
+                      .content {
+
+                       /* Remove extra bottom border */
+                        margin: -18px -24px -24px !important;
+                      }
+            card_mod:
+              style: |
+
+                /* Color border around avatar to show person status */
+                ha-card {
+                  --chip-background:
+                  {% if is_state(config.entity, ['home', 'not_home', 'unknown']) %}
+                    rgb(var(--rgb-state-person-{{ states(config.entity) | replace('_', '-') }} ))
+                  {% else %}
+                    rgb(var(--rgb-state-person-zone))
+                  {% endif %};
+                } 
+
+                /* Slightly enlarge & bring to front on hover */
+                ha-card:hover {
+                  transform: scale(1.2);
+                  transform-origin: top center;
+                  z-index: 1;
+                  transition: all 1s;
+                }
+
+                    card_mod:
+                      style: |
+                        /* Color border around avatar to show person status */
+                        ha-card {
+                          --chip-background:
+                          {% if is_state(config.entity, ['home', 'not_home', 'unknown']) %}
+                            rgb(var(--rgb-state-person-{{ states(config.entity) | replace('_', '-') }} ))
+                          {% else %}
+                            rgb(var(--rgb-state-person-zone))
+                          {% endif %};
+                        } 
+                        /* Slightly enlarge & bring to front on hover */
+                        ha-card:hover {
+                          transform: scale(1.2);
+                          transform-origin: top center;
+                          z-index: 1;
+                          transition: all 1s;
+                        }
+        alignment: end
+        card_mod:
+          style: |
+            ha-card { 
+              /* Overlap avatar Chips */
+              --chip-spacing: calc(-1 * var(--mush-chip-spacing, 8px));
+
+              /* Set size of border around Chips */
+              --chip-avatar-padding: 2px;
+
+              /* Reduce width to fit Chips & allow max space for weather */
+              width: fit-content;
+              transition: all 0s;
+            }
+      - type: custom:mushroom-template-card
+        primary: '{{ state_attr(entity, ''temperature'') | round(1) }} °C'
+        secondary: >-
+          {% set condition = state_attr(entity, 'forecast')[0]['conditions'] %}
+          {% set intensity =
+          states('sensor.blythe_bridge_probability_of_precipitation_3_hourly')
+          %}
+
+          {% if intensity != 'None' %}
+            {% set condition = intensity + "mm" ' Rain' %}
+          {% endif %}
+
+          {{ condition }}
+        icon: ' '
+        entity: weather.met_office_blythe_bridge_3_hourly
+        picture: >-
+          {% set condition = states(entity)  %}
+
+          {% set intensity = states('sensor.blythe_bridge_weather_3_hourly') |
+          replace(" ", "-") | lower %}
+
+          {% if condition == 'partlycloudy' and is_state('sun.sun',
+          'below_horizon') %}
+            {% set condition = condition + '-night' %}
+          {% endif %}
+
+          {% if intensity != 'none' and condition != 'lightning' %}
+            {% set condition = intensity %}
+          {% endif %}
+
+          /local/weather_icons/anim/{{ condition }}.svg
+        tap_action:
+          action: navigate
+          navigation_path: '#weather'
+        card_mod:
+          style:
+            mushroom-state-info$: |
+              /* Align text on the right */
+              .container {
+                transform: scaleX(-1);
+                text-align: right;
+                width: fit-content;
+              }
+            .: |
+              ha-card {
+                /* Move icon to the right */
+                transform: scaleX(-1);
+
+                /* Enlarge icon & remove circular shape */
+                --icon-size: 42px;
+                --icon-border-radius: 0;
+
+                /* Style secondary text */
+                --card-secondary-font-weight: normal;
+
+                /* Remove styling from card */
+                --ha-card-background: none;
+                --ha-card-box-shadow: none;
+                --ha-card-border-width: 0;
+                padding: 0px !important;
+                transition: all 0s;
+              }
+  - type: horizontal-stack
+    cards:
+      - type: custom:mod-card
+        card:
+          type: custom:mushroom-template-card
+          primary: 'Events:'
+          icon: phu:thermostat
+          icon_color: red
+          alignment: left
+          tap_action:
+            action: navigate
+            navigation_path: '#thermostat'
+          card_mod:
+            style: |
+              ha-card {
+                background: none;
+                --card-primary-font-size: 20px;
+                margin-bottom: 0px !important;
+                margin-left: -15px !important;
+                 }
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: conditional
+        conditions:
+          - entity: sensor.recycling_2
+            state: '1'
+        chip:
+          type: template
+          icon: mdi:recycle
+          icon_color: green
+          content: Recycling Bin Collection Tomorrow
+          entity: sensor.recycling_2
+          tap_action:
+            action: more-info
+          style: |
+            ha-card {
+             --chip-background: none;
+             margin-left: -10px !important;
+             margin-bottom: -10px !important;
+               }
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: conditional
+        conditions:
+          - entity: sensor.gardenwaste
+            state: '1'
+        chip:
+          type: template
+          icon: mdi:compost
+          icon_color: '#B87333'
+          content: Garden Bin Collection Tomorrow
+          entity: sensor.gardenwaste
+          tap_action:
+            action: more-info
+          style: |
+            ha-card {
+             --chip-background: none;
+             margin-left: -10px !important;
+             margin-bottom: 0px !important;
+               }
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: conditional
+        conditions:
+          - entity: sensor.general
+            state: '1'
+        chip:
+          type: template
+          icon: phu:garbage-residual
+          icon_color: lightgrey
+          content: General Waste Collection Tomorrow
+          entity: sensor.general
+          tap_action:
+            action: more-info
+          style: |
+            ha-card {
+             --chip-background: none;
+             margin-left: -10px !important;
+             margin-bottom: 0px !important;
+               }
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: conditional
+        conditions:
+          - entity: sensor.recycling_2
+            state: '0'
+        chip:
+          type: template
+          icon: mdi:recycle
+          icon_color: green
+          content: Recycling Bin Collection Today
+          entity: sensor.recycling_2
+          tap_action:
+            action: more-info
+          style: |
+            ha-card {
+             --chip-background: none;
+             margin-left: -10px !important;
+             --text-color: red;
+             margin-bottom: 0px !important;
+             animation: blink 1.4s linear infinite;
+            }
+            @keyframes blink {
+              20% {opacity: 0.5;}
+              }
+            }
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: conditional
+        conditions:
+          - entity: sensor.gardenwaste
+            state: '0'
+        chip:
+          type: template
+          icon: mdi:compost
+          icon_color: '#B87333'
+          content: Garden Bin Collection Today
+          entity: sensor.gardenwaste
+          tap_action:
+            action: more-info
+          style: |
+            ha-card {
+             --chip-background: none;
+             margin-left: -10px !important;
+             --text-color: red;
+             margin-bottom: 0px !important;
+             animation: blink 1.4s linear infinite;
+            }
+            @keyframes blink {
+              20% {opacity: 0.5;}
+              }
+            }
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: conditional
+        conditions:
+          - entity: sensor.general
+            state: '0'
+        chip:
+          type: template
+          icon: mdi:trash-can
+          icon_color: grey
+          content: General Waste Collection Today
+          entiry: sensor.general
+          tap_action:
+            action: more-info
+          style: |
+            ha-card {
+             --chip-background: none;
+             margin-left: -10px !important;
+             --text-color: red;
+             margin-bottom: 0px !important;
+             animation: blink 1.4s linear infinite;
+            }
+            @keyframes blink {
+              20% {opacity: 0.5;}
+              }
+            }
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: conditional
+        conditions:
+          - entity: sensor.anniversary_christmas
+            state_not: '0'
+        chip:
+          type: template
+          icon: phu:christmas-tree-v2
+          icon_color: red
+          entity: sensor.anniversary_christmas
+          content: It's Christmas in {{ states(entity) }} Days!
+          style: |
+            ha-card {
+             --chip-background: none;
+             margin-left: -9px;
+             margin-bottom: -16px !important;
+             margin-top: -8px !important;
+               }
+      - type: conditional
+        conditions:
+          - entity: sensor.anniversary_tenerife
+            state_not: '0'
+        chip:
+          type: template
+          icon: mdi:palm-tree
+          icon_color: lime
+          entity: sensor.anniversary_tenerife
+          content: We go Tenerife in {{ states(entity) }} Days!
+          style: |
+            ha-card {
+             --chip-background: none;
+             margin-left: -9px;
+             margin-bottom: -10px !important;
+               }
+  - type: conditional
+    conditions:
+      - entity: sensor.weather_alerts
+        state_not: '0'
+    card:
+      show_name: true
+      show_icon: false
+      type: custom:button-card
+      tap_action:
+        action: navigate
+        navigation_path: weather
+      entity: sensor.weather_alerts
+      show_state: false
+      name: |
+        [[[
+          if (entity.state == 0) return "";
+          else if (entity.state == 1) return "⚠️  1 Weather Warning Issued!";
+          else
+            return "⚠️  Multiple Weather Warnings Issued!!";
+        ]]]
+      styles:
+        name:
+          - color: yellow
+          - text-shadow: 1px 1px 3px red
+          - font-weight: bold
+          - animation: blink 1.5s linear infinite
+          - font-size: 12px
+        card:
+          - margin-left: '-88px;'
+          - margin-bottom: '-10px !important;'
+          - margin-top: '-8px'
+  - type: custom:atomic-calendar-revive
+    entities:
+      - entity: calendar.home
+        name: Home
+        icon: mdi:home
+        maxDaysToShow: 5
+      - entity: calendar.work
+        name: Work
+        maxDaysToShow: 5
+        icon: mdi:work
+    name: ''
+    firstDayOfWeek: 1
+    maxDaysToShow: 7
+    refreshInterval: 60
+    showDate: false
+    sortByStartTime: false
+    hideFinishedEvents: false
+    showRelativeTime: true
+    showMultiDay: false
+    showMultiDayEventParts: false
+    showCurrentEventLine: false
+    showMonth: false
+    showWeekDay: true
+    disableEventLink: true
+    showNoEventsForToday: false
+    showFullDayProgress: true
+    showEventIcon: true
+    showHiddenText: false
+    showCalendarName: false
+    showWeekNumber: false
+    calShowDescription: false
+    showLastCalendarWeek: false
+    disableCalEventLink: true
+    disableCalLocationLink: true
+    disableCalLink: true
+    dimFinishedEvents: true
+    showDescription: false
+    noEventsForNextDaysText: 🚫 No Calendar events in the next few days
+    showEventDate: false
+    showDatePerEvent: true
+    card_mod:
+      style: |
+        ha-card {
+          padding: 10px !important
+          padding-left: -15px;
+          font-size: 12px;
+          font-weight: bold;
+          margin: -10px -15px;
+        }
+  - type: horizontal-stack
+    cards:
+      - type: custom:mushroom-template-card
+        secondary: ''
+        icon: mdi:sofa
+        layout: vertical
+        icon_color: pink
+        tap_action:
+          action: navigate
+          navigation_path: '#downstairs'
+        card_mod:
+          style: |
+            ha-card {
+              /* Set size and spacing of button */
+              width: 58px;
+              --spacing: 8px;
+              padding-bottom: calc(var(--spacing) * 1.618) !important;
+
+              /* Styling of button */
+              background: none;
+              --icon-border-radius: 15px;
+              box-shadow: none;
+              border-radius: calc(var(--ha-card-border-radius, 12px) * 2) !important;
+
+              /* Center button */
+              margin-left: auto;
+              margin-right: auto;
+              transition: all 0s;
+            }
+
+            /* Add subtle color on hover */
+            ha-card:hover {
+              background: color-mix(in srgb, var(--{{ config.icon_color }}-color) 5%, var(--card-background-color)) !important;
+            }
+            ha-state-icon {
+               animation: blink 1.4s linear infinite alternate;
+            }
+            @keyframes blink {
+              30% {opacity: 0.5;}
+              }
+            }
+      - type: custom:mushroom-template-card
+        primary: ''
+        secondary: ''
+        icon: mdi:fish
+        icon_color: amber
+        layout: vertical
+        tap_action:
+          action: navigate
+          navigation_path: '#garden'
+        card_mod:
+          style: |
+            ha-card {
+              /* Set size and spacing of button */
+              width: 58px;
+              --spacing: 8px;
+              padding-bottom: calc(var(--spacing) * 1.618) !important;
+
+              /* Styling of button */
+              background: none;
+              --icon-border-radius: 15px;
+              box-shadow: none;
+              border-radius: calc(var(--ha-card-border-radius, 12px) * 2) !important;
+
+              /* Center button */
+              margin-left: auto;
+              margin-right: auto;
+              transition: all 0s;
+            }
+
+            /* Add subtle color on hover */
+            ha-card:hover {
+              background: color-mix(in srgb, var(--{{ config.icon_color }}-color) 5%, var(--card-background-color)) !important;
+            }
+            ha-state-icon {
+              animation: wobbling 0.4s linear infinite alternate;
+            }
+            @keyframes wobbling {
+              0% {
+                transform: rotate(-10degree);
+             }
+              100% {
+                transform: rotate(20deg);
+              }
+              }
+      - type: custom:mushroom-template-card
+        secondary: ''
+        icon: mdi:shower-head
+        icon_color: cyan
+        layout: vertical
+        tap_action:
+          action: navigate
+          navigation_path: '#bathroom'
+        card_mod:
+          style: |
+            ha-card {
+              /* Set size and spacing of button */
+              width: 58px;
+              --spacing: 8px;
+              padding-bottom: calc(var(--spacing) * 1.618) !important;
+
+              /* Styling of button */
+              background: none;
+              --icon-border-radius: 15px;
+              box-shadow: none;
+              border-radius: calc(var(--ha-card-border-radius, 12px) * 2) !important;
+
+              /* Center button */
+              margin-left: auto;
+              margin-right: auto;
+              transition: all 0s;
+            }
+
+            /* Add subtle color on hover */
+            ha-card:hover {
+              background: color-mix(in srgb, var(--{{ config.icon_color }}-color) 5%, var(--card-background-color)) !important;
+            }
+            ha-state-icon {
+              animation: clip 0.7s ease-out infinite;
+            }
+            @keyframes clip {
+              0% {clip-path: inset(0 0 45% 0); }
+              100% { clip-path: inset(0 0 0 0); }
+            }
+              }
+      - type: custom:mushroom-template-card
+        secondary: ''
+        icon: fapro:bar
+        layout: vertical
+        icon_color: red
+        tap_action:
+          action: navigate
+          navigation_path: '#bar'
+        card_mod:
+          style: |
+            ha-card {
+              /* Set size and spacing of button */
+              width: 58px;
+              --spacing: 8px;
+              padding-bottom: calc(var(--spacing) * 1.618) !important;
+
+              /* Styling of button */
+              background: none;
+              --icon-border-radius: 15px;
+              box-shadow: none;
+              border-radius: calc(var(--ha-card-border-radius, 12px) * 2) !important;
+
+              /* Center button */
+              margin-left: auto;
+              margin-right: auto;
+              transition: all 0s;
+            }
+
+            /* Add subtle color on hover */
+            ha-card:hover {
+              background: color-mix(in srgb, var(--{{ config.icon_color }}-color) 5%, var(--card-background-color)) !important;
+            }
+            @keyframes wobbling {
+                  0% {
+                    transform: rotate(-20deg);
+                  }
+                  100% {
+                    transform: rotate(20deg);
+                  }
+                }
+            ha-state-icon {
+              animation: wobbling 0.7s linear infinite alternate;
+            }
+      - type: custom:mushroom-template-card
+        secondary: ''
+        icon: mdi:cctv
+        layout: vertical
+        icon_color: green
+        tap_action:
+          action: navigate
+          navigation_path: '#cctv'
+        card_mod:
+          style: |
+            ha-card {
+              /* Set size and spacing of button */
+              width: 58px;
+              --spacing: 8px;
+              padding-bottom: calc(var(--spacing) * 1.618) !important;
+
+              /* Styling of button */
+              background: none;
+              --icon-border-radius: 15px;
+              box-shadow: none;
+              border-radius: calc(var(--ha-card-border-radius, 12px) * 2) !important;
+
+              /* Center button */
+              margin-left: auto;
+              margin-right: auto;
+              transition: all 0s;
+            }
+            /* Add subtle color on hover */
+            ha-card:hover {
+              background: color-mix(in srgb, var(--{{ config.icon_color }}-color) 5%, var(--card-background-color)) !important;
+            }
+            ha-state-icon {
+              animation: cam 3s linear infinite;
+            }
+            @keyframes cam {
+              0%, 100% { transform: rotate(12deg); }
+              30% { transform: rotate(-6deg); }
+              45% { transform: rotate(8deg); }
+              75% { transform: rotate(-10deg); }
+            }
+      - type: custom:mushroom-template-card
+        secondary: ''
+        icon: mdi:weather-night
+        layout: vertical
+        icon_color: cyan
+        tap_action:
+          action: navigate
+          navigation_path: '#upstairs'
+        card_mod:
+          style: |
+            ha-card {
+              /* Set size and spacing of button */
+              width: 58px;
+              --spacing: 8px;
+              padding-bottom: calc(var(--spacing) * 1.618) !important;
+
+              /* Styling of button */
+              background: none;
+              --icon-border-radius: 15px;
+              box-shadow: none;
+              border-radius: calc(var(--ha-card-border-radius, 12px) * 2) !important;
+
+              /* Center button */
+              margin-left: auto;
+              margin-right: auto;
+              transition: all 0s;
+            }
+            /* Add subtle color on hover */
+            ha-card:hover {
+              background: color-mix(in srgb, var(--{{ config.icon_color }}-color) 5%, var(--card-background-color)) !important;
+            }
+            ha-state-icon {
+              animation: moon 5s linear infinite, stars 3s linear infinite;
+            }
+            @keyframes moon {
+              0%, 100% { transform: rotate(12deg); }
+              30% { transform: rotate(-6deg); }
+              45% { transform: rotate(8deg); }
+              75% { transform: rotate(-10deg); }
+            }
+            @keyframes stars {
+              0%, 3.1%, 14.1% { clip-path: inset(0 0 0 0); }
+              3% { clip-path: polygon(1% 1%, 0% 99%, 99% 100%, 99% 62%, 68% 62%, 62% 44%, 76% 34%, 100% 34%, 99% 0%); }
+              14% { clip-path: polygon(1% 1%, 0% 99%, 99% 100%, 100% 25%, 51% 45%, 38% 34%, 36% 0); }
+            } 
+              }
+card_mod:
+  style: |
+    ha-card {
+      /* Set padding of card */
+      padding: 8px 8px 12px;
+
+      /* Move card up to match header card */
+      margin-top: -20px;
+
+      /* Styling of card background */
+      background: color-mix(in srgb, var(--card-background-color) 80%, var(--primary-background-color)) !important;
+      border-radius: 0px 0px var(--ha-card-border-radius, 12px) var(--ha-card-border-radius, 12px);
+
+      transition: all 0s;
+    }
